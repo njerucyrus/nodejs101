@@ -18,7 +18,7 @@ exports.post_list = function (req, res) {
 };
 
 exports.post_detail = function (req, res) {
-    Post.findById(req.params.id, function (err, post) {
+    Post.findById(req.params.id, function(err, post){
 
         if(err){
           throw err;

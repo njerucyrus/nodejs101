@@ -34,11 +34,11 @@ router.post('/post/:id/update', postController.post_update);
 router.post('/post/:id/delete', postController.post_delete);
 
 
-router.get('/comments', commentController.comment_list);
+router.get('/:post_id/comments', commentController.comment_list);
 
 router.get('/comment/:id', commentController.comment_detail);
 
-router.post('/comment/create', commentController.comment_create);
+router.post('/comment/:post_id/create', commentController.comment_create);
 
 router.post('/comment/:id/update', commentController.comment_update);
 
