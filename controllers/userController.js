@@ -1,4 +1,5 @@
 var User = require('../models/user');
+var bcrypt = require('bcrypt');
 
 
 exports.user_list = function (req, res) {
@@ -27,19 +28,23 @@ exports.user_detail = function (req, res) {
 };
 
 exports.user_create = function (req, res) {
+
+
     //var user = req.body;
     User.findOne({'email': req.body.email}, function (err, user) {
-        if (err) throw err;
+        if (err){
+            res.status(500).send({message: err})
+        }
         if (user) {
-            res.json({
-                error: {
-                    message: "User already exists"
-                }
-            });
+            res.status(500).send({message: "User already exists", user:user})
         } else {
-            User.create(req.body, function (err, instance) {
-                if (err) throw err;
-                res.json(instance)
+            var userObj = new User(req.body);
+            userObj.password = bcrypt.hashSync(req.body.password, 10);
+            userObj.save(function (err, user) {
+                if (err){
+                    res.status(500).send({message: err});
+                }
+                res.status(200).send({message: "User account created"});
             });
         }
     });
