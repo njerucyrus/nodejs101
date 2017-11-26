@@ -14,7 +14,7 @@ exports.post_list = function (req, res) {
                 }
             })
         }
-    })
+    }).populate('posted_by');
 };
 
 exports.post_detail = function (req, res) {
@@ -32,7 +32,7 @@ exports.post_detail = function (req, res) {
                 }
             })
         }
-    });
+    }).populate('posted_by');
 };
 
 exports.post_create = function (req, res) {

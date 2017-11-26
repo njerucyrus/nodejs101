@@ -20,6 +20,10 @@ var LikesSchema = new Schema(
             type: Schema.ObjectId,
             ref: 'Post'
         },
+        user_id: {
+         type: Schema.ObjectId,
+         ref: 'User'
+        },
         likes_count: {
             type: Number,
             default: 0

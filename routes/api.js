@@ -13,6 +13,7 @@ var commentsCountController = require('../controllers/commentsCountController');
 var router = express.Router();
 
 
+
 router.get('/users', userController.user_list);
 
 router.get('/user/:id', userController.user_detail);
