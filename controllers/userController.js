@@ -9,7 +9,14 @@ exports.user_detail = function (req, res) {
 };
 
 exports.user_create = function (req, res) {
-    res.send("NOT implemented : UserPost");
+    var user = req.body;
+    User.create(user, function (err, user) {
+        if (err){
+            throw err
+        }
+        req.json(user);
+    });
+
 };
 
 exports.user_update = function (req, res) {
