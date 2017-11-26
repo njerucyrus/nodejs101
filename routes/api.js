@@ -9,12 +9,14 @@ var commentController = require('../controllers/commentController');
 var likesController = require('../controllers/likesController');
 
 var commentsCountController = require('../controllers/commentsCountController');
+var auth = require('../controllers/authController');
 
 var router = express.Router();
 
 
 
-router.get('/users', userController.user_list);
+router.post('/auth/authenticate', auth.authenticate);
+router.get('/users',  auth.loginRequired, userController.user_list);
 
 router.get('/user/:id', userController.user_detail);
 

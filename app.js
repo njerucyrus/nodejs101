@@ -4,10 +4,15 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var User = require('./models/user');
+var jwt = require("jsonwebtoken");
+var auth = require('./controllers/authController');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
 var api = require('./routes/api');
+
+
 
 var app = express();
 
@@ -23,6 +28,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+//authentication middlware
+app.use(function (req, res, next) {
+  if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')==='JWT'){
+      jwt.verify(req.headers.authorization.split(' ')[1], 'BLOG_POST_KEY', function (err, decode) {
+        if (err) req.user = undefined;
+        req.user = decode;
+        next();
+      })
+  }else{
+      req.user =undefined;
+      next();
+  }
+});
 
 
 app.use('/', index);
@@ -46,6 +65,8 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
+
+
 app.listen(3000);
 console.log('Started Development server on port 3000');
 

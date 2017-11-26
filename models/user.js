@@ -1,7 +1,7 @@
 'use strict';
 
 var mongoose = require('mongoose');
-var bcryp = require('bcrypt');
+var bcrypt = require('bcrypt');
 
 var mongoDB = 'mongodb://127.0.0.1/blog';
 mongoose.connect(mongoDB, {
@@ -45,6 +45,14 @@ var UserSchema = new Schema(
     }
 );
 UserSchema.methods.comparePassword = function (password) {
-   return bcryt.compareSync(password, this.password);
+   return bcrypt.compare(password, this.password);
 };
+
+UserSchema.virtual('full_name').get(function () {
+    return this.first_name + " "+ this.last_name;
+}).set(function(v) {
+    this.__full_name = v;
+});
+
+
 module.exports = mongoose.model('User', UserSchema);
