@@ -17,7 +17,7 @@ var router = express.Router();
 
 
 router.post('/auth/authenticate', auth.authenticate);
-router.get('/users',  auth.loginRequired, userController.user_list);
+router.get('/users',   auth.loginRequired, userController.user_list);
 
 router.get('/user/:id', userController.user_detail);
 

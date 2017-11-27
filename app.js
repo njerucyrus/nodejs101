@@ -31,8 +31,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //authentication middlware
 app.use(function (req, res, next) {
-    if (req.headers.authorization || req.headers.authorization.split(' ')==='JWT'){
-        jwt.verify(req.headers.authorization.split(' ')[1], 'BLOG_POST_KEY', function (err, decode) {
+    if (req.headers  || req.headers.authorization || req.headers.authorization.split(' ')==='JWT'){
+        jwt.verify(req.headers.authorization, 'BLOG_POST_KEY', function (err, decode) {
             if (err) req.user = undefined;
             req.user = decode;
             next();
