@@ -27,7 +27,8 @@ var PostSchema = new Schema(
         image_url:{
             type: String,
             required: false,
-            max: 255
+            max: 255,
+            default: ""
         },
 
         posted_by: {

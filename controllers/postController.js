@@ -1,4 +1,6 @@
 var Post = require('../models/post');
+var fileUpload = require('express-fileupload');
+var path = require('path');
 
 exports.post_list = function (req, res) {
     Post.find({}, function (err, posts) {
@@ -54,14 +56,43 @@ exports.post_create = function (req, res) {
                 }
             });
         }else{
-            Post.create(req.body, function (err) {
-               if(err)
-                   throw err;
-                res.json({status: {
-                    message: "Post Created Successfully",
-                    statusCode: res.statusCode
-                }})
-            })
+            if (!req.files) {
+                Post.create(req.body, function (err) {
+                    if (err)
+                        throw err;
+                    res.json({
+                        status: {
+                            message: "Post Created Successfully",
+                            statusCode: res.statusCode
+                        }
+                    })
+                })
+            }else{
+                var imageFile = req.files.image;
+                var extension = path.extname(imageFile.name);
+                var allowedExtesions = ['.png', '.jpeg', '.gif', '.jpg'];
+                if (allowedExtesions.includes(extension)){
+                    imageFile.mv(__dirname+'../public/uploads'+imageFile.name, function (err) {
+                        if (err){
+                            res.status(500).json({message:err});
+                        }
+                        var post = new Post(req.body);
+                        post.image_url = 'uploads/'+imageFile.name;
+                        post.save(function (err) {
+                            if (err){
+                                res.status(500).json({message: err})
+                            }
+                            res.json({status: "success", message:"Post Created successfully"});
+
+                        });
+
+                    })
+                }else{
+                    res.status(500).json({status:"error", message: "only images allowed"});
+                }
+
+            }
+
         }
     })
 };

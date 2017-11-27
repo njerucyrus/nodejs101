@@ -4,9 +4,9 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var User = require('./models/user');
+var fileUpload = require('express-fileupload');
+
 var jwt = require("jsonwebtoken");
-var auth = require('./controllers/authController');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -27,6 +27,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
+app.use(fileUpload({limits:{fileSize: 5*1024*1024}}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 //authentication middlware
