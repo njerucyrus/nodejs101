@@ -25,8 +25,8 @@ exports.comment_detail = function (req, res) {
 };
 
 exports.comment_create = function (req, res) {
-    var comment_by = null;
-    Comment.findOne({'comment_by': comment_by, 'post_id': req.params.post_id}, function (err, comment) {
+
+    Comment.findOne({'comment_by': req.user._id, 'post_id': req.params.post_id}, function (err, comment) {
         if (err)
             throw err;
         if (comment !== null)
@@ -42,7 +42,8 @@ exports.comment_create = function (req, res) {
 };
 
 exports.comment_update = function (req, res) {
-    Comment.findById(req.params.id, function (err, comment) {
+    //make sure you only update your comment
+    Comment.findOne({_id:req.params.id, commented_by:req.user._id}, function (err, comment) {
         if (err)
             throw err;
         if (comment) {
@@ -57,9 +58,9 @@ exports.comment_update = function (req, res) {
 };
 
 exports.comment_delete = function (req, res) {
-    Comment.findById(res.params.id, function (err, comment) {
+    Comment.findOne({_id:req.params.id, commented_by:req.user._id}, function (err, comment) {
         if (err)
-            throw err
+            res.status(500).json({message:err});
         if (comment) {
             comment.remove();
             res.json({status: "success", message: "comment deleted"});

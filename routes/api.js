@@ -17,7 +17,9 @@ var router = express.Router();
 
 
 router.post('/auth/authenticate', auth.authenticate);
-router.get('/users',   auth.loginRequired, userController.user_list);
+
+
+router.get('/users',    userController.user_list);
 
 router.get('/user/:id', userController.user_detail);
 
@@ -32,21 +34,21 @@ router.get('/posts', postController.post_list);
 
 router.get('/post/:id', postController.post_detail);
 
-router.post('/post/create', postController.post_create);
+router.post('/post/create', auth.loginRequired, postController.post_create);
 
-router.post('/post/:id/update', postController.post_update);
-router.post('/post/:id/delete', postController.post_delete);
+router.post('/post/:id/update', auth.loginRequired,postController.post_update);
+router.post('/post/:id/delete', auth.loginRequired,postController.post_delete);
 
 
 router.get('/:post_id/comments', commentController.comment_list);
 
 router.get('/comment/:id', commentController.comment_detail);
 
-router.post('/comment/:post_id/create', commentController.comment_create);
+router.post('/comment/:post_id/create', auth.loginRequired,commentController.comment_create);
 
-router.post('/comment/:id/update', commentController.comment_update);
+router.post('/comment/:id/update', auth.loginRequired,commentController.comment_update);
 
-router.post('/comment/:id/delete', commentController.comment_delete);
+router.post('/comment/:id/delete', auth.loginRequired,commentController.comment_delete);
 
 
 router.get('/likes', likesController.likes_list);

@@ -36,7 +36,12 @@ exports.post_detail = function (req, res) {
 };
 
 exports.post_create = function (req, res) {
-    Post.findOne({'title': req.body.title, 'body': req.body.body}, function (err, post) {
+    var query = {
+        'title': req.body.title,
+        'body': req.body.body,
+        posted_by: req.user._id
+    };
+    Post.findOne(query, function (err, post) {
         if(err){
             throw err;
         }
@@ -62,9 +67,9 @@ exports.post_create = function (req, res) {
 };
 
 exports.post_update = function (req, res) {
- Post.findById(req.params.id, function (err, post) {
+ Post.findOne({_id:req.params.id, posted_by:req.user._id}, function (err, post) {
      if (err){
-        throw err;
+        res.status(500).json({message:err});
      }
      if (post !== null){
          post.title = req.body.title;
@@ -82,7 +87,7 @@ exports.post_update = function (req, res) {
 };
 
 exports.post_delete = function (req, res) {
-Post.findById(req.params.id, function (err, post) {
+Post.findOne({_id:req.params.id, posted_by:req.user._id}, function (err, post) {
     if(err) throw err;
     if (post){
         post.remove();
